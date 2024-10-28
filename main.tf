@@ -32,7 +32,7 @@ resource "aws_iam_role_policy" "lambda_exec_policy" {
           "ec2:StartInstances",
           "ec2:StopInstances",
           "ec2:DescribeInstances",
-          "ec2:DescribeImages"  # Add this permission
+          "ec2:DescribeImages"
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -45,6 +45,21 @@ resource "aws_iam_role_policy" "lambda_exec_policy" {
         ]
         Effect   = "Allow"
         Resource = "*"
+      },
+      # Add S3 permissions
+      {
+        Action   = [
+          "s3:CreateBucket",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:PutBucketPolicy"
+        ]
+        Effect   = "Allow"
+        Resource = [
+          "arn:aws:s3:::*"
+        ]
       }
     ]
   })
@@ -65,8 +80,8 @@ module "s3" {
   lambda_exec_role_arn = aws_iam_role.lambda_exec_role.arn
   aws_account_id       = var.aws_account_id
   aws_region           = var.aws_region
-  project              = var.project              # Add this line
-  lambda_timeout       = var.lambda_timeout       # If lambda_timeout is required
+  project              = var.project           
+  lambda_timeout       = var.lambda_timeout      
 }
 
 
@@ -76,6 +91,6 @@ module "lex_bot" {
   create_ec2_lambda_arn = module.ec2.create_ec2_instance_lambda_arn
   start_ec2_lambda_arn  = module.ec2.start_ec2_instance_lambda_arn
   stop_ec2_lambda_arn   = module.ec2.stop_ec2_instance_lambda_arn
-  create_s_three_lambda_arn  = module.s3.create_s_three_bucket_lambda_arn  # Add this line
+  create_s_three_lambda_arn  = module.s3.create_s_three_bucket_lambda_arn 
 }
 

@@ -1,6 +1,5 @@
 import boto3
 import logging
-import json
 
 # Configure logging
 logger = logging.getLogger()
@@ -48,12 +47,15 @@ def lambda_handler(event, context):
             MaxCount=1,
             InstanceType='t2.micro'
         )
-        
-        instance_id = instances[0].id
-        instance_state = instances[0].state['Name']  # Fetch instance state (pending/running)
+        print(instances ,'in1')
 
+        instance_id = instances[0].id
+        print( instance_id  ,'in2')
+        
+        instance_state = instances[0].state['Name']  # Fetch instance state (pending/running)
+        print( instance_state  ,'in3')
         # Return response in a format that Lex understands
-        response_content = {
+        return {
             'dialogAction': {
                 'type': 'Close',
                 'fulfillmentState': 'Fulfilled',
@@ -64,14 +66,10 @@ def lambda_handler(event, context):
             }
         }
         
-        return {
-            'statusCode': 200,
-            'body': json.dumps(response_content)
-        }
     except Exception as e:
         logger.error(f"Error creating EC2 instance: {str(e)}")
         
-        error_response = {
+        return {
             'dialogAction': {
                 'type': 'Close',
                 'fulfillmentState': 'Failed',
@@ -81,8 +79,4 @@ def lambda_handler(event, context):
                 }
             }
         }
-        
-        return {
-            'statusCode': 500,
-            'body': json.dumps(error_response)
-        }
+

@@ -1,11 +1,11 @@
 # Lambda Function for S3 Bucket Creation
 resource "aws_lambda_function" "create_s_three_bucket_lambda_function" {
-  filename         = "modules/s3/create_s_three_bucket.zip"
+  filename         = "modules/s3/create_s_three_bucket.py.zip"
   function_name    = "${var.project}-create-s-three-bucket"
   role             = var.lambda_exec_role_arn
   handler          = "create_s_three_bucket.lambda_handler"
   runtime          = "python3.9"
-  source_code_hash = filebase64sha256("modules/s3/create_s_three_bucket.zip")
+  source_code_hash = filebase64sha256("modules/s3/create_s_three_bucket.py.zip")
   timeout          = var.lambda_timeout
 }
 
